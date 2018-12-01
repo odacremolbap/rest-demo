@@ -1,0 +1,17 @@
+#!/bin/bash
+# Copy this file as '$(GH_REPO)/assets/run/environment'
+# Customize values
+#
+# All flag values need to be defined
+# If you want to test an empty value set it to the
+# empty type ("" for strings, 0 for numberics)
+
+ARCH=amd64
+SERVER_PORT=9101
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=todolist_user
+DB_PASSWORD=todo42
+DB_NAME=todolist
+VERBOSITY=5
+LOG_FORMATTER=server

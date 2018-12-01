@@ -1,0 +1,7 @@
+*.swp
+*.tmp
+*.retry
+.vscode/
+_output/
+vendor/
+assets/run/environment
