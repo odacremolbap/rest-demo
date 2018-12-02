@@ -83,6 +83,14 @@ clean:
 dep-clean:
 	rm -rf ./vendor/
 
+.PHONY: db
+db:
+	if [ "$$(docker ps -q -f name=postgres)" ]; then \
+		docker stop postgres; \
+		docker rm postgres; \
+	fi; \
+	docker run --name postgres -e POSTGRES_PASSWORD=rootpwd -d postgres;
+
 .PHONY: run
 run:
 	@./assets/run/run.sh
