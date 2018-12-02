@@ -104,6 +104,12 @@ func (t *TaskResource) Populate(ws *restful.WebService) {
 			"page_size number of pages by page. Use 0 to list all items",
 		).DataType("integer"))
 
+	rbGET.Param(
+		ws.QueryParameter(
+			"watch",
+			"if watch parameter is present, client call will be streamed upgrades on all task processing",
+		))
+
 	ws.Route(rbGET)
 
 	ws.Route(

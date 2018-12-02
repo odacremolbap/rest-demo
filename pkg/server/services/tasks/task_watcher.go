@@ -17,22 +17,16 @@ func (t *TaskResource) watcherLoop() {
 		select {
 		case watcher := <-t.registerWatcher:
 			{
-				// t.Lock()
-				// defer t.Unlock()
 				log.V(10).Info("watcherLoop - registering watcher")
 				t.registeredWatchers[watcher] = true
 			}
 		case watcher := <-t.unregisterWatcher:
 			{
-				// t.Lock()
-				// defer t.Unlock()
 				log.V(10).Info("watcherLoop - unregistering watcher")
 				delete(t.registeredWatchers, watcher)
 			}
 		case event := <-t.eventNotifier:
 			{
-				// t.Lock()
-				// defer t.Unlock()
 				log.V(10).Info("watcherLoop - received event")
 				for watcher := range t.registeredWatchers {
 					log.V(10).Info("loop watchher to send event")
@@ -84,7 +78,8 @@ func (t *TaskResource) watchTasks(req *restful.Request, res *restful.Response, q
 			return
 		}
 
-		fmt.Fprintf(res.ResponseWriter, "data: %s\n\n", eventBytes)
+		// TODO, receive operation along with the object being processed
+		fmt.Fprintf(res.ResponseWriter, "%s\n", eventBytes)
 
 		if err != nil {
 			response.InternalServerErrorResponse(res, err)

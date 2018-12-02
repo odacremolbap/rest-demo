@@ -20,7 +20,7 @@ const (
 const (
 	nameMaxLength        int = 50
 	descriptionMaxLength int = 500
-	categoryMaxLength    int = 500
+	categoryMaxLength    int = 20
 )
 
 // TaskStatus choices
