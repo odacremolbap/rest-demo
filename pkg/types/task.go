@@ -20,6 +20,7 @@ const (
 const (
 	nameMaxLength        int = 50
 	descriptionMaxLength int = 500
+	categoryMaxLength    int = 500
 )
 
 // TaskStatus choices
@@ -35,10 +36,10 @@ var TaskStatus = [9]string{
 type Task struct {
 	ID          int        `json:"id"`
 	Name        string     `json:"name"`
-	Description string     `json:"description"`
-	Category    string     `json:"category"`
+	Description string     `json:"description,omitempty"`
+	Category    string     `json:"category,omitempty"`
 	Status      string     `json:"status"`
-	DueDate     *time.Time `json:"due_date"`
+	DueDate     *time.Time `json:"due_date,omitempty"`
 	Created     *time.Time `json:"created"`
 }
 
@@ -54,6 +55,10 @@ func (t *Task) Validate() error {
 
 	if len(t.Description) > descriptionMaxLength {
 		return errors.Errorf("Task description must be less than %d characters", descriptionMaxLength)
+	}
+
+	if len(t.Category) > categoryMaxLength {
+		return errors.Errorf("Task category must be less than %d characters", categoryMaxLength)
 	}
 
 	// TODO category show be taken from a list of existing categories

@@ -92,7 +92,7 @@ func (p *PersistenceManager) GetTask(ID int) (*types.Task, error) {
 		return nil, errors.Wrap(err, "error preparing GetTask statement")
 	}
 
-	err = stmt.QueryRow().Scan(&item.ID,
+	err = stmt.QueryRow(item.ID).Scan(
 		&item.Name,
 		&item.Description,
 		&item.Category,
@@ -117,7 +117,7 @@ func (p *PersistenceManager) CreateTask(item *types.Task) (*types.Task, error) {
 			description, 
 			category, 
 			status, 
-			duedate,
+			duedate
 		)
 		values
 			($1, $2, $3, $4, $5)
@@ -137,8 +137,7 @@ func (p *PersistenceManager) CreateTask(item *types.Task) (*types.Task, error) {
 		item.Description,
 		item.Category,
 		strings.ToLower(item.Status),
-		*item.DueDate,
-		item.Status).
+		item.DueDate).
 		Scan(
 			&item.ID,
 			&item.Created)
@@ -174,7 +173,7 @@ func (p *PersistenceManager) UpdateOneTask(item *types.Task) (*types.Task, error
 		item.Description,
 		item.Category,
 		strings.ToLower(item.Status),
-		*item.DueDate,
+		item.DueDate,
 		item.ID)
 
 	if err != nil {
@@ -198,7 +197,7 @@ func (p *PersistenceManager) DeleteOneTask(ID int) error {
 		return errors.Wrap(err, "error preparing DeleteOneTask statement")
 	}
 
-	_, err = stmt.Exec(query, ID)
+	_, err = stmt.Exec(ID)
 	if err != nil {
 		return errors.Wrap(err, "error deleting Tasks")
 	}
