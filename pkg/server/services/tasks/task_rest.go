@@ -12,11 +12,26 @@ import (
 )
 
 // TaskResource REST layer
-type TaskResource struct{}
+type TaskResource struct {
+	eventNotifier      chan interface{}
+	registerWatcher    chan chan interface{}
+	unregisterWatcher  chan chan interface{}
+	registeredWatchers map[chan interface{}]bool
+}
 
 // NewTaskResource initializes a TaskResource
 func NewTaskResource() *TaskResource {
-	return &TaskResource{}
+
+	tr := &TaskResource{
+		eventNotifier:      make(chan interface{}),
+		registerWatcher:    make(chan chan interface{}),
+		unregisterWatcher:  make(chan chan interface{}),
+		registeredWatchers: make(map[chan interface{}]bool),
+	}
+
+	go tr.watcherLoop()
+
+	return tr
 }
 
 // allowed filters, types, and mapping to DB fields
@@ -48,7 +63,7 @@ var (
 )
 
 // Populate register the REST layer
-func (t TaskResource) Populate(ws *restful.WebService) {
+func (t *TaskResource) Populate(ws *restful.WebService) {
 	ws.Path(ws.RootPath() + "/tasks")
 	tags := []string{"tasks"}
 

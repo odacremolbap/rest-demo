@@ -15,10 +15,11 @@ import (
 	"github.com/odacremolbap/rest-demo/pkg/types"
 )
 
-func (t TaskResource) listAllTasks(req *restful.Request, res *restful.Response) {
+func (t *TaskResource) listAllTasks(req *restful.Request, res *restful.Response) {
 	log.V(10).Info("listAllTasks handler", "query_params", req.Request.URL.Query())
 
 	query := parameters.URLValuesToMap(req.Request.URL.Query())
+
 	q, err := clauses.BuildQueryClauseFromRequest(
 		query,
 		allowedWhere,
@@ -31,6 +32,11 @@ func (t TaskResource) listAllTasks(req *restful.Request, res *restful.Response) 
 		return
 	}
 
+	if _, ok := query["watch"]; ok {
+		t.watchTasks(req, res, q)
+		return
+	}
+
 	tts, err := db.Manager.SelectTasks(q)
 	if err != nil {
 		response.InternalServerErrorResponse(res, err)
@@ -39,14 +45,14 @@ func (t TaskResource) listAllTasks(req *restful.Request, res *restful.Response) 
 	response.WriteJSON(res, http.StatusOK, tts)
 }
 
-func (t TaskResource) getOneTask(req *restful.Request, res *restful.Response) {
+func (t *TaskResource) getOneTask(req *restful.Request, res *restful.Response) {
 	log.V(10).Info("getOneTask handler", "path_params", req.PathParameters())
 
 	task := req.Attribute("task")
 	response.WriteJSON(res, http.StatusOK, task)
 }
 
-func (t TaskResource) createTask(req *restful.Request, res *restful.Response) {
+func (t *TaskResource) createTask(req *restful.Request, res *restful.Response) {
 	task := &types.Task{}
 	err := req.ReadEntity(task)
 	if err != nil {
@@ -67,10 +73,11 @@ func (t TaskResource) createTask(req *restful.Request, res *restful.Response) {
 		response.InternalServerErrorResponse(res, err)
 		return
 	}
+	t.eventNotifier <- task
 	response.WriteJSON(res, http.StatusCreated, task)
 }
 
-func (t TaskResource) updateTask(req *restful.Request, res *restful.Response) {
+func (t *TaskResource) updateTask(req *restful.Request, res *restful.Response) {
 	task := req.Attribute("task").(*types.Task)
 
 	taskUp := &types.Task{}
@@ -98,10 +105,11 @@ func (t TaskResource) updateTask(req *restful.Request, res *restful.Response) {
 		response.InternalServerErrorResponse(res, err)
 		return
 	}
+	t.eventNotifier <- taskUp
 	response.WriteJSON(res, http.StatusOK, taskUp)
 }
 
-func (t TaskResource) deleteTask(req *restful.Request, res *restful.Response) {
+func (t *TaskResource) deleteTask(req *restful.Request, res *restful.Response) {
 	task := req.Attribute("task").(*types.Task)
 
 	log.V(10).Info(
@@ -137,11 +145,12 @@ func (t TaskResource) deleteTask(req *restful.Request, res *restful.Response) {
 			return
 		}
 	}
+	t.eventNotifier <- task
 	response.WriteJSON(res, http.StatusOK, task)
 }
 
 // retrieveTaskFilter unifies all single item retrieval at a restful filter
-func (t TaskResource) retrieveTaskFilter(req *restful.Request, res *restful.Response, chain *restful.FilterChain) {
+func (t *TaskResource) retrieveTaskFilter(req *restful.Request, res *restful.Response, chain *restful.FilterChain) {
 	id, err := strconv.Atoi(req.PathParameter("task-id"))
 	if err != nil {
 		response.ErrorResponse(
