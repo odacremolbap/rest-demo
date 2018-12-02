@@ -25,6 +25,7 @@ create table tasks(
    id serial primary key,
    name varchar(50) not null,
    description text,
+   category varchar(20) not null,
    status varchar(10) not null,
    duedate timestamp,
    created timestamp not null default current_timestamp
