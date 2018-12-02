@@ -14,7 +14,7 @@ import (
 )
 
 // Ticket prefix sent to users and writen to logs
-const ticketPrefix = "nksop"
+const ticketPrefix = "todolist"
 
 // ErrorResponse turns an error into a JSON response
 func ErrorResponse(res *restful.Response, code int, err error) {
