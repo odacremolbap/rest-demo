@@ -89,7 +89,10 @@ db:
 		docker stop postgres; \
 		docker rm postgres; \
 	fi; \
-	docker run --name postgres -e POSTGRES_PASSWORD=rootpwd -d postgres;
+	docker run --name postgres -p 5432:5432 -d postgres;
+	# TODO replace with tcp pings
+	sleep 3;
+	psql -h localhost -U postgres -p 5432 -f assets/deployment/database/schema.sql;
 
 .PHONY: run
 run:
