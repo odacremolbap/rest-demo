@@ -33,6 +33,10 @@ Task deletion is logical by default. To make it a physical database deletion it 
 - `DELETE http://localhost:9101/v1/tasks/3` would set task 3 status to deleted
 - `DELETE http://localhost:9101/v1/tasks/3?permanent=true` would delete task 3 from the database
 
+Clients can be generated using OpenAPI docs endpoint:
+
+- `http://localhost:9101/apidocs.json`
+
 There is also a watch feature that returns the processed Task:
 
 - `http://localhost:9101/v1/tasks?watch` would block and list all Tasks processed
