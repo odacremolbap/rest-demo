@@ -4,7 +4,7 @@ This is a REST demo of a TODO list implemented using Go and Postgres
 
 It uses:
 
-- [Restful(https://github.com/emicklei/go-restful) for REST definition and routing
+- [Restful](https://github.com/emicklei/go-restful) for REST definition and routing
 - [Logrus](https://github.com/sirupsen/logrus) wrapped as [Logr](https://github.com/go-logr/logr) for logging
 - [pq](github.com/lib/pq) as Postgres database driver
 - [pkg/errors](github.com/pkg/errors) for errors stacks and wrapping
