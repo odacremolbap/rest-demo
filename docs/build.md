@@ -29,7 +29,7 @@ To successfuly run rest-demo you will need to:
 This repo haven't had a lot of time to work on, so these are the main issues to work at:
 - fmt, vet and lint are not part of Makefile
 - Tests coverage are in the very low side
-- Watch implementation doesn't fit very well with Restful library, probably adding a subresource for it would sound better. Also, it needs to wrap the response to add the operation being watched (Create, Update, Delete)
+- Watch implementation doesn't fit very well with Restful library, probably adding a subresource for it would sound better. Also, it needs to wrap the response to add the operation being watched (Create, Update, Delete) and allow filtering.
 - When logging V(10), database logs look ugly. We need to re-arrange `\t\n` to make it look readable
 - We should `test -race`, specially for the watch feature
 - Watch feature would need `sync.RWMutex` when managing watchers
